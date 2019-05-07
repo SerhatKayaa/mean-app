@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output} from '@angular/core';
 import { post } from 'selenium-webdriver/http';
+import { Post } from '../post.model';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-post-create',
@@ -7,10 +9,17 @@ import { post } from 'selenium-webdriver/http';
   styleUrls: ['./post-create.component.css']
 })
 export class PostCreateComponent {
-  enteredValue = '';
-  newPosts = 'No -Content';
+  enteredContent = '';
+  enteredTitle = '';
+  @Output() postCreated = new EventEmitter<Post>();
 
-  onAddPost(){
-    this.newPosts = this.enteredValue;
+  onAddPost(form: NgForm){
+    if (form.invalid){
+      return;
+    }
+    const post = {
+      title: form.value.title, content: form.value.content
+    };
+    this.postCreated.emit(post);
   }
 }
